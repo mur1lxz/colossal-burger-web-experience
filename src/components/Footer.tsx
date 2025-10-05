@@ -1,4 +1,5 @@
 import { Instagram, MessageCircle, Mail } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -29,12 +30,13 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="text-center">
           {/* Logo */}
-          <div className="mb-6 fade-in">
-            <h2 className="text-3xl font-black">
-              <span className="text-primary">COLOSSAL</span>{" "}
-              <span className="text-foreground">BURGUER</span>
-            </h2>
-            <p className="text-muted-foreground mt-2 text-sm">
+          <div className="mb-6 fade-in flex flex-col items-center">
+            <img 
+              src={logo} 
+              alt="Colossal Burguer" 
+              className="h-20 w-auto mb-3 hover:scale-105 transition-transform duration-300"
+            />
+            <p className="text-muted-foreground text-sm">
               O sabor gigante que conquista
             </p>
           </div>
