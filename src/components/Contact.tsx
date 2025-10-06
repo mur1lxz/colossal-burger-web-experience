@@ -63,18 +63,18 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 bg-background">
+    <section id="contact" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">
+        <div className="text-center mb-8 md:mb-12 fade-in-up">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-3 md:mb-4">
             ENTRE EM <span className="text-primary">CONTATO</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Dúvidas, sugestões ou pedidos especiais? Estamos aqui para você!
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Contact Form */}
           <div className="fade-in-up">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -152,25 +152,25 @@ const Contact = () => {
             </div>
 
             <div className="pt-6 border-t border-border">
-              <h3 className="font-bold text-xl mb-4 text-foreground">Redes Sociais</h3>
-              <div className="flex gap-4">
+              <h3 className="font-bold text-lg md:text-xl mb-4 text-foreground">Redes Sociais</h3>
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
                     href={social.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-2 px-6 py-3 bg-card rounded-lg hover:scale-110 transition-all duration-300 ${social.color} group border border-primary/20`}
+                    className={`flex items-center justify-center gap-2 px-4 md:px-6 py-3 bg-card rounded-lg hover:scale-110 transition-all duration-300 ${social.color} group border border-primary/20`}
                   >
-                    <social.icon size={24} className="group-hover:rotate-12 transition-transform" />
-                    <span className="font-medium">{social.label}</span>
+                    <social.icon size={20} className="group-hover:rotate-12 transition-transform md:w-6 md:h-6" />
+                    <span className="font-medium text-sm md:text-base">{social.label}</span>
                   </a>
                 ))}
               </div>
             </div>
 
             {/* Map Placeholder */}
-            <div className="h-64 bg-card rounded-lg overflow-hidden border border-primary/20">
+            <div className="h-48 md:h-64 bg-card rounded-lg overflow-hidden border border-primary/20">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1974!2d-46.6333!3d-23.5505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzAxLjgiUyA0NsKwMzgnMDAuMCJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
                 width="100%"

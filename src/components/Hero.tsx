@@ -27,19 +27,19 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 fade-in-up text-glow">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 fade-in-up text-glow leading-tight">
           O SABOR GIGANTE
           <br />
           <span className="text-primary">QUE VOCÊ RESPEITA!</span>
         </h1>
-        <p className="text-xl md:text-2xl mb-8 fade-in-up max-w-2xl mx-auto text-foreground/90 animation-delay-200">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 fade-in-up max-w-2xl mx-auto text-foreground/90 animation-delay-200 px-4">
           Hambúrgueres artesanais feitos com ingredientes frescos e paixão.
         </p>
         <Button
           variant="hero"
-          size="xl"
+          size="lg"
           onClick={scrollToMenu}
-          className="fade-in-up animation-delay-400 text-xl"
+          className="fade-in-up animation-delay-400 text-base md:text-lg lg:text-xl"
         >
           FAZER PEDIDO AGORA 🍔
         </Button>

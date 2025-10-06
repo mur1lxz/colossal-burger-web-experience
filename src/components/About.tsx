@@ -3,11 +3,11 @@ import aboutKitchen from "@/assets/about-kitchen.jpg";
 
 const About = () => {
   return (
-    <section id="about" className="py-20 bg-foreground">
+    <section id="about" className="py-12 md:py-20 bg-foreground">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="fade-in-up">
-            <h2 className="text-4xl md:text-5xl font-black mb-6 text-background">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 md:mb-6 text-background">
               SOBRE A <span className="text-primary">COLOSSAL</span>
             </h2>
             <p className="text-lg mb-6 text-background/80">
@@ -33,7 +33,7 @@ const About = () => {
               <img
                 src={aboutKitchen}
                 alt="Cozinha da Colossal Burguer"
-                className="w-full h-[500px] object-cover"
+                className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
             </div>

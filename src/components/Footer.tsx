@@ -26,43 +26,43 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-background border-t border-primary/20 py-12">
+    <footer className="bg-background border-t border-primary/20 py-8 md:py-12">
       <div className="container mx-auto px-4">
         <div className="text-center">
           {/* Logo */}
-          <div className="mb-6 fade-in flex flex-col items-center">
+          <div className="mb-4 md:mb-6 fade-in flex flex-col items-center">
             <img 
               src={logo} 
               alt="Colossal Burguer" 
-              className="h-20 w-auto mb-3 hover:scale-105 transition-transform duration-300"
+              className="h-16 md:h-20 w-auto mb-2 md:mb-3 hover:scale-105 transition-transform duration-300"
             />
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs md:text-sm">
               O sabor gigante que conquista
             </p>
           </div>
 
           {/* Social Links */}
-          <div className="flex justify-center gap-6 mb-8 fade-in-up">
+          <div className="flex justify-center gap-4 md:gap-6 mb-6 md:mb-8 fade-in-up">
             {socialLinks.map((social, index) => (
               <a
                 key={index}
                 href={social.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-3 bg-card rounded-full hover:scale-110 hover:rotate-12 transition-all duration-300 ${social.color} border border-primary/20`}
+                className={`p-2 md:p-3 bg-card rounded-full hover:scale-110 hover:rotate-12 transition-all duration-300 ${social.color} border border-primary/20`}
                 aria-label={social.label}
               >
-                <social.icon size={24} />
+                <social.icon size={20} className="md:w-6 md:h-6" />
               </a>
             ))}
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-border pt-6 fade-in-up">
-            <p className="text-muted-foreground">
+          <div className="border-t border-border pt-4 md:pt-6 fade-in-up">
+            <p className="text-muted-foreground text-sm md:text-base">
               © {currentYear} Colossal Burguer — O sabor gigante que conquista.
             </p>
-            <p className="text-sm text-muted-foreground/60 mt-2">
+            <p className="text-xs md:text-sm text-muted-foreground/60 mt-1 md:mt-2">
               Todos os direitos reservados.
             </p>
           </div>
