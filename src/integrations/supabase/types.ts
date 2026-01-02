@@ -14,16 +14,160 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_extras: string[] | null
+          item_name: string
+          item_observations: string | null
+          item_size: string | null
+          order_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_extras?: string[] | null
+          item_name: string
+          item_observations?: string | null
+          item_size?: string | null
+          order_id: string
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_extras?: string[] | null
+          item_name?: string
+          item_observations?: string | null
+          item_size?: string | null
+          order_id?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          delivery_address: string | null
+          delivery_complement: string | null
+          delivery_fee: number
+          delivery_neighborhood: string | null
+          delivery_number: string | null
+          delivery_reference: string | null
+          delivery_type: Database["public"]["Enums"]["delivery_type"]
+          id: string
+          order_number: string
+          payment_change_for: number | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          delivery_address?: string | null
+          delivery_complement?: string | null
+          delivery_fee?: number
+          delivery_neighborhood?: string | null
+          delivery_number?: string | null
+          delivery_reference?: string | null
+          delivery_type?: Database["public"]["Enums"]["delivery_type"]
+          id?: string
+          order_number: string
+          payment_change_for?: number | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          delivery_address?: string | null
+          delivery_complement?: string | null
+          delivery_fee?: number
+          delivery_neighborhood?: string | null
+          delivery_number?: string | null
+          delivery_reference?: string | null
+          delivery_type?: Database["public"]["Enums"]["delivery_type"]
+          id?: string
+          order_number?: string
+          payment_change_for?: number | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      delivery_type: "pickup" | "delivery"
+      order_status:
+        | "pending"
+        | "preparing"
+        | "delivering"
+        | "delivered"
+        | "cancelled"
+      payment_method: "pix" | "card" | "cash"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +294,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      delivery_type: ["pickup", "delivery"],
+      order_status: [
+        "pending",
+        "preparing",
+        "delivering",
+        "delivered",
+        "cancelled",
+      ],
+      payment_method: ["pix", "card", "cash"],
+    },
   },
 } as const

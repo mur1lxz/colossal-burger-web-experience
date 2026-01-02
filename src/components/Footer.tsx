@@ -1,4 +1,5 @@
-import { Instagram, MessageCircle, Mail } from "lucide-react";
+import { Instagram, MessageCircle, Mail, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
@@ -65,6 +66,13 @@ const Footer = () => {
             <p className="text-xs md:text-sm text-muted-foreground/60 mt-1 md:mt-2">
               Todos os direitos reservados.
             </p>
+            <Link 
+              to="/admin/login" 
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground/40 mt-4 hover:text-primary transition-colors"
+            >
+              <Lock className="h-3 w-3" />
+              Área Administrativa
+            </Link>
           </div>
         </div>
       </div>

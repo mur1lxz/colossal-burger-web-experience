@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, MapPin, CreditCard, Banknote, QrCode, Store, Truck } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -30,6 +31,7 @@ const Checkout = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const deliveryFee = formData.deliveryType === 'delivery' ? 5 : 0;
   const orderTotal = total + deliveryFee;
@@ -61,7 +63,11 @@ const Checkout = () => {
     return value.slice(0, 15);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const generateOrderNumber = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -73,37 +79,65 @@ const Checkout = () => {
       return;
     }
 
-    const orderId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    setSubmitting(true);
 
-    // Save order to localStorage (simulating backend)
-    const order = {
-      id: orderId,
-      items,
-      customer: { name: formData.name, phone: formData.phone },
-      delivery: {
-        type: formData.deliveryType,
-        address: formData.address,
-        neighborhood: formData.neighborhood,
-        number: formData.number,
-        complement: formData.complement,
-        reference: formData.reference,
-      },
-      payment: {
-        method: formData.paymentMethod,
-        changeFor: formData.changeFor ? parseFloat(formData.changeFor) : undefined,
-      },
-      subtotal: total,
-      deliveryFee,
-      total: orderTotal,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const orderNumber = generateOrderNumber();
 
-    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    localStorage.setItem('orders', JSON.stringify([...existingOrders, order]));
+      // Insert order into database
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          order_number: orderNumber,
+          customer_name: formData.name.trim(),
+          customer_phone: formData.phone.trim(),
+          delivery_type: formData.deliveryType,
+          delivery_address: formData.deliveryType === 'delivery' ? formData.address.trim() : null,
+          delivery_neighborhood: formData.deliveryType === 'delivery' ? formData.neighborhood.trim() : null,
+          delivery_number: formData.deliveryType === 'delivery' ? formData.number.trim() : null,
+          delivery_complement: formData.complement.trim() || null,
+          delivery_reference: formData.reference.trim() || null,
+          payment_method: formData.paymentMethod,
+          payment_change_for: formData.changeFor ? parseFloat(formData.changeFor) : null,
+          subtotal: total,
+          delivery_fee: deliveryFee,
+          total: orderTotal,
+          status: 'pending',
+        })
+        .select()
+        .single();
 
-    clearCart();
-    navigate(`/confirmacao?pedido=${orderId}`);
+      if (orderError) throw orderError;
+
+      // Insert order items
+      const orderItems = items.map((item) => ({
+        order_id: orderData.id,
+        item_name: item.menuItem.name,
+        item_size: item.size,
+        item_extras: item.extras.map((e) => e.name),
+        item_observations: item.observations || null,
+        quantity: item.quantity,
+        unit_price: item.menuItem.price,
+        total_price: item.totalPrice,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      clearCart();
+      navigate(`/confirmacao?pedido=${orderNumber}`);
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao enviar pedido',
+        description: error.message || 'Tente novamente mais tarde.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0) {
@@ -338,8 +372,9 @@ const Checkout = () => {
                 type="submit"
                 variant="glow"
                 className="mt-6 w-full py-6 text-lg font-bold animate-pulse"
+                disabled={submitting}
               >
-                Confirmar Pedido
+                {submitting ? 'Enviando...' : 'Confirmar Pedido'}
               </Button>
             </div>
           </div>
