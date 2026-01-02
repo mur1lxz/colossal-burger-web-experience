@@ -29,7 +29,10 @@ import {
   DollarSign,
   RefreshCw,
   Eye,
+  Printer,
 } from 'lucide-react';
+import { useRef } from 'react';
+import OrderTicket from '@/components/admin/OrderTicket';
 import logo from '@/assets/logo.png';
 
 type OrderStatus = 'pending' | 'preparing' | 'delivering' | 'delivered' | 'cancelled';
@@ -82,6 +85,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -168,6 +172,63 @@ const Admin = () => {
   const handleLogout = async () => {
     await signOut();
     navigate('/admin/login');
+  };
+
+  const handlePrintTicket = () => {
+    const printContent = ticketRef.current;
+    if (!printContent) return;
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Comanda #${selectedOrder?.order_number}</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Courier New', monospace; font-size: 12px; }
+            .ticket { width: 300px; padding: 16px; }
+            .text-center { text-align: center; }
+            .font-bold { font-weight: bold; }
+            .text-xl { font-size: 18px; }
+            .text-lg { font-size: 16px; }
+            .text-xs { font-size: 10px; }
+            .border-dashed { border-bottom: 2px dashed #000; padding-bottom: 12px; margin-bottom: 12px; }
+            .border-dotted { border-bottom: 1px dotted #999; margin-top: 8px; }
+            .flex { display: flex; justify-content: space-between; }
+            .ml-3 { margin-left: 12px; }
+            .mt-2 { margin-top: 8px; }
+            .mb-2 { margin-bottom: 8px; }
+            .mb-3 { margin-bottom: 12px; }
+            .mt-4 { margin-top: 16px; }
+            .pt-2 { padding-top: 8px; }
+            .pt-3 { padding-top: 12px; }
+            .p-1 { padding: 4px; }
+            .p-2 { padding: 8px; }
+            .bg-gray { background: #f0f0f0; }
+            .bg-yellow { background: #fef3cd; }
+            .italic { font-style: italic; }
+            .border-top { border-top: 2px solid #000; }
+            @media print {
+              body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
   };
 
   // Stats
@@ -463,6 +524,21 @@ const Admin = () => {
                     R$ {Number(selectedOrder.total).toFixed(2).replace('.', ',')}
                   </span>
                 </div>
+              </div>
+
+              {/* Print Button */}
+              <Button 
+                onClick={handlePrintTicket} 
+                className="w-full"
+                variant="outline"
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Imprimir Comanda
+              </Button>
+
+              {/* Hidden Ticket for Printing */}
+              <div className="hidden">
+                <OrderTicket ref={ticketRef} order={selectedOrder} />
               </div>
             </div>
           )}
