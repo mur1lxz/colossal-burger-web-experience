@@ -1,34 +1,27 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import burgerBacon from "@/assets/burger-bacon.jpg";
-import burgerSmash from "@/assets/burger-smash.jpg";
-import burgerEgg from "@/assets/burger-egg.jpg";
-
-const menuItems = [
-  {
-    id: 1,
-    name: "Colossal Bacon",
-    description: "Pão artesanal, carne 180g, cheddar derretido, bacon crocante e molho especial",
-    price: "R$ 32,90",
-    image: burgerBacon,
-  },
-  {
-    id: 2,
-    name: "Smash Supreme",
-    description: "Duas carnes finas smash, cheddar derretido, cebola caramelizada e molho especial",
-    price: "R$ 29,90",
-    image: burgerSmash,
-  },
-  {
-    id: 3,
-    name: "Colossal Egg",
-    description: "Pão brioche, carne 200g, queijo suíço, ovo frito, alface e tomate frescos",
-    price: "R$ 34,90",
-    image: burgerEgg,
-  },
-];
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { menuItems, categories } from '@/data/menuData';
+import { MenuItem } from '@/types/order';
+import AddToCartModal from '@/components/order/AddToCartModal';
+import CartButton from '@/components/cart/CartButton';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 const Menu = () => {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const filteredItems = selectedCategory === 'all'
+    ? menuItems
+    : menuItems.filter((item) => item.category === selectedCategory);
+
+  const handleAddToCart = (item: MenuItem) => {
+    setSelectedItem(item);
+    setModalOpen(true);
+  };
+
   return (
     <section id="menu" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -41,8 +34,23 @@ const Menu = () => {
           </p>
         </div>
 
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {categories.map((category) => (
+            <Button
+              key={category.id}
+              variant={selectedCategory === category.id ? 'glow' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedCategory(category.id)}
+              className="font-bold"
+            >
+              {category.name}
+            </Button>
+          ))}
+        </div>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {menuItems.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <Card
               key={item.id}
               className="bg-card border-border overflow-hidden hover:scale-105 hover:shadow-[var(--shadow-card)] transition-all duration-300 fade-in-up"
@@ -65,8 +73,15 @@ const Menu = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col sm:flex-row items-center gap-3 sm:justify-between p-4 md:p-6 pt-0">
-                <span className="text-2xl md:text-3xl font-bold text-primary">{item.price}</span>
-                <Button variant="glow" size="default" className="font-bold w-full sm:w-auto">
+                <span className="text-2xl md:text-3xl font-bold text-primary">
+                  R$ {item.price.toFixed(2).replace('.', ',')}
+                </span>
+                <Button
+                  variant="glow"
+                  size="default"
+                  className="font-bold w-full sm:w-auto"
+                  onClick={() => handleAddToCart(item)}
+                >
                   Pedir Agora
                 </Button>
               </CardContent>
@@ -74,6 +89,14 @@ const Menu = () => {
           ))}
         </div>
       </div>
+
+      <AddToCartModal
+        item={selectedItem}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
+      <CartButton onClick={() => setCartOpen(true)} />
+      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </section>
   );
 };
