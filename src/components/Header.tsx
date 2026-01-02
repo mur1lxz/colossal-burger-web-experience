@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
@@ -6,6 +7,8 @@ import logo from "@/assets/logo.png";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,10 +20,24 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (id: string) => {
+    setIsMobileMenuOpen(false);
+    
+    if (location.pathname !== '/') {
+      navigate(`/#${id}`);
+      return;
+    }
+    
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
-      setIsMobileMenuOpen(false);
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -41,7 +58,10 @@ const Header = () => {
     >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 fade-in">
+          <div 
+            className="flex items-center space-x-2 fade-in cursor-pointer"
+            onClick={handleLogoClick}
+          >
             <img 
               src={logo} 
               alt="Colossal Burguer" 
