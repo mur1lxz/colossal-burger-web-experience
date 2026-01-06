@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { MenuItem, CartItem, CartItemExtra, EXTRAS, SIZE_PRICES } from '@/types/order';
+import { MenuItem, CartItem, CartItemExtra, EXTRAS, SIZE_PRICES, SODA_FLAVORS, MILKSHAKE_FLAVORS } from '@/types/order';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
@@ -26,12 +26,18 @@ const AddToCartModal = ({ item, open, onOpenChange }: AddToCartModalProps) => {
   const [extras, setExtras] = useState<CartItemExtra[]>([]);
   const [observations, setObservations] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [flavor, setFlavor] = useState('');
   const { addItem } = useCart();
   const { toast } = useToast();
 
   if (!item) return null;
 
   const isBurger = item.category === 'burgers';
+  const isSoda = item.id === 'refrigerante';
+  const isMilkshake = item.id === 'milkshake';
+  const hasFlavors = isSoda || isMilkshake;
+  const flavorOptions = isSoda ? SODA_FLAVORS : isMilkshake ? MILKSHAKE_FLAVORS : [];
+  
   const basePrice = item.price;
   const sizePrice = isBurger ? SIZE_PRICES[size] : 0;
   const extrasPrice = extras.reduce((sum, extra) => sum + extra.price, 0);
@@ -46,10 +52,18 @@ const AddToCartModal = ({ item, open, onOpenChange }: AddToCartModalProps) => {
   };
 
   const handleAddToCart = () => {
-    addItem(item, size, extras, observations, quantity);
+    if (hasFlavors && !flavor) {
+      toast({
+        title: 'Selecione um sabor',
+        description: 'Por favor, escolha o sabor desejado.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    addItem(item, size, extras, observations, quantity, flavor || undefined);
     toast({
       title: 'Item adicionado!',
-      description: `${quantity}x ${item.name} foi adicionado ao carrinho.`,
+      description: `${quantity}x ${item.name}${flavor ? ` (${flavorOptions.find(f => f.id === flavor)?.name})` : ''} foi adicionado ao carrinho.`,
     });
     onOpenChange(false);
     resetForm();
@@ -60,6 +74,7 @@ const AddToCartModal = ({ item, open, onOpenChange }: AddToCartModalProps) => {
     setExtras([]);
     setObservations('');
     setQuantity(1);
+    setFlavor('');
   };
 
   return (
@@ -101,6 +116,24 @@ const AddToCartModal = ({ item, open, onOpenChange }: AddToCartModalProps) => {
                     <span className="text-sm text-muted-foreground">
                       {SIZE_PRICES[s] > 0 ? `+R$ ${SIZE_PRICES[s].toFixed(2).replace('.', ',')}` : 'Padrão'}
                     </span>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          )}
+
+          {hasFlavors && (
+            <div className="space-y-3">
+              <Label className="text-lg font-bold">Sabor</Label>
+              <RadioGroup value={flavor} onValueChange={setFlavor}>
+                {flavorOptions.map((f) => (
+                  <div key={f.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+                    <div className="flex items-center gap-3">
+                      <RadioGroupItem value={f.id} id={f.id} />
+                      <Label htmlFor={f.id} className="cursor-pointer font-medium">
+                        {f.name}
+                      </Label>
+                    </div>
                   </div>
                 ))}
               </RadioGroup>

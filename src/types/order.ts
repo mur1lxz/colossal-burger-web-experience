@@ -20,7 +20,20 @@ export interface CartItem {
   extras: CartItemExtra[];
   observations: string;
   totalPrice: number;
+  flavor?: string;
 }
+
+export const SODA_FLAVORS = [
+  { id: 'coca-cola', name: 'Coca-Cola' },
+  { id: 'guarana', name: 'Guaraná Antarctica' },
+  { id: 'sprite', name: 'Sprite' },
+];
+
+export const MILKSHAKE_FLAVORS = [
+  { id: 'chocolate', name: 'Chocolate' },
+  { id: 'morango', name: 'Morango' },
+  { id: 'ovomaltine', name: 'Ovomaltine' },
+];
 
 export interface OrderData {
   id: string;
