@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/contexts/CartContext';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { SODA_FLAVORS, MILKSHAKE_FLAVORS } from '@/types/order';
 
 interface CartDrawerProps {
   open: boolean;
@@ -50,8 +51,13 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                     />
                     <div className="flex-1">
                       <h4 className="font-bold text-foreground">{item.menuItem.name}</h4>
+                      {item.flavor && (
+                        <p className="text-sm text-primary font-medium">
+                          {[...SODA_FLAVORS, ...MILKSHAKE_FLAVORS].find(f => f.id === item.flavor)?.name}
+                        </p>
+                      )}
                       <p className="text-sm text-muted-foreground">
-                        {item.size} {item.extras.length > 0 && `+ ${item.extras.length} extras`}
+                        {item.menuItem.category === 'burgers' && item.size} {item.extras.length > 0 && `+ ${item.extras.length} extras`}
                       </p>
                       {item.observations && (
                         <p className="text-xs text-muted-foreground italic">"{item.observations}"</p>

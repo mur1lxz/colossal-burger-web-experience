@@ -3,7 +3,7 @@ import { CartItem, MenuItem, CartItemExtra, SIZE_PRICES } from '@/types/order';
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (menuItem: MenuItem, size: CartItem['size'], extras: CartItemExtra[], observations: string, quantity: number) => void;
+  addItem: (menuItem: MenuItem, size: CartItem['size'], extras: CartItemExtra[], observations: string, quantity: number, flavor?: string) => void;
   removeItem: (index: number) => void;
   updateQuantity: (index: number, quantity: number) => void;
   clearCart: () => void;
@@ -50,7 +50,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     size: CartItem['size'],
     extras: CartItemExtra[],
     observations: string,
-    quantity: number
+    quantity: number,
+    flavor?: string
   ) => {
     const totalPrice = calculateItemTotal(menuItem, size, extras, quantity);
     const newItem: CartItem = {
@@ -60,6 +61,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       observations,
       quantity,
       totalPrice,
+      flavor,
     };
     setItems((prev) => [...prev, newItem]);
     setJustAdded(true);
