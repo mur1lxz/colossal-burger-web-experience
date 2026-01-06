@@ -2,6 +2,7 @@ import { MenuItem } from '@/types/order';
 import burgerBacon from '@/assets/burger-bacon.jpg';
 import burgerSmash from '@/assets/burger-smash.jpg';
 import burgerEgg from '@/assets/burger-egg.jpg';
+import sodaCan from '@/assets/soda-can.jpg';
 
 export const menuItems: MenuItem[] = [
   // Burgers
@@ -52,7 +53,7 @@ export const menuItems: MenuItem[] = [
     name: 'Refrigerante Lata',
     description: 'Coca-Cola, Guaraná ou Sprite 350ml',
     price: 6.90,
-    image: burgerEgg,
+    image: sodaCan,
     category: 'drinks',
   },
   {
