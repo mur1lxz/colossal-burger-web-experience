@@ -57,7 +57,7 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                         </p>
                       )}
                       <p className="text-sm text-muted-foreground">
-                        {item.menuItem.category === 'burgers' && item.size} {item.extras.length > 0 && `+ ${item.extras.length} extras`}
+                        {['classicos', 'especiais', 'promocoes'].includes(item.menuItem.category) && item.size} {item.extras.length > 0 && `+ ${item.extras.length} extras`}
                       </p>
                       {item.observations && (
                         <p className="text-xs text-muted-foreground italic">"{item.observations}"</p>

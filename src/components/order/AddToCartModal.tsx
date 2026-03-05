@@ -32,9 +32,9 @@ const AddToCartModal = ({ item, open, onOpenChange }: AddToCartModalProps) => {
 
   if (!item) return null;
 
-  const isBurger = item.category === 'burgers';
-  const isSoda = item.id === 'refrigerante';
-  const isMilkshake = item.id === 'milkshake';
+  const isBurger = item.category === 'classicos' || item.category === 'especiais' || item.category === 'promocoes';
+  const isSoda = item.id === 'refrigerante-350' || item.id === 'refrigerante-200';
+  const isMilkshake = false;
   const hasFlavors = isSoda || isMilkshake;
   const flavorOptions = isSoda ? SODA_FLAVORS : isMilkshake ? MILKSHAKE_FLAVORS : [];
   

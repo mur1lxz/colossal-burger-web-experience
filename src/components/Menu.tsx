@@ -63,6 +63,11 @@ const Menu = () => {
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                {item.badge && (
+                  <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
+                    {item.badge}
+                  </span>
+                )}
               </div>
               <CardHeader className="p-4 md:p-6">
                 <CardTitle className="text-xl md:text-2xl font-black text-foreground">
@@ -73,9 +78,16 @@ const Menu = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col sm:flex-row items-center gap-3 sm:justify-between p-4 md:p-6 pt-0">
-                <span className="text-2xl md:text-3xl font-bold text-primary">
-                  R$ {item.price.toFixed(2).replace('.', ',')}
-                </span>
+                <div className="flex items-center gap-2">
+                  {item.originalPrice && (
+                    <span className="text-lg text-muted-foreground line-through">
+                      R$ {item.originalPrice.toFixed(2).replace('.', ',')}
+                    </span>
+                  )}
+                  <span className="text-2xl md:text-3xl font-bold text-primary">
+                    R$ {item.price.toFixed(2).replace('.', ',')}
+                  </span>
+                </div>
                 <Button
                   variant="glow"
                   size="default"

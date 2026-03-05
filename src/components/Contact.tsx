@@ -42,7 +42,7 @@ const Contact = () => {
     {
       icon: MapPin,
       label: "Endereço",
-      value: "Rua dos Hambúrgueres, 123 - São Paulo, SP",
+      value: "Jardim Limoeiro, São Paulo, SP",
       link: "#",
     },
   ];
