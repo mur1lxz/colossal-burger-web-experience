@@ -34,29 +34,81 @@ const Menu = () => {
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* Category Filter - horizontal scroll on mobile */}
+        <div className="flex overflow-x-auto gap-2 mb-6 md:mb-8 pb-2 md:flex-wrap md:justify-center scrollbar-hide">
           {categories.map((category) => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? 'glow' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(category.id)}
-              className="font-bold"
+              className="font-bold whitespace-nowrap flex-shrink-0"
             >
               {category.name}
             </Button>
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* Mobile: compact list layout | Desktop: grid cards */}
+        {/* Mobile List View */}
+        <div className="flex flex-col gap-3 md:hidden">
+          {filteredItems.map((item, index) => (
+            <div
+              key={item.id}
+              className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-all duration-200 cursor-pointer fade-in-up"
+              style={{ animationDelay: `${index * 80}ms` }}
+              onClick={() => handleAddToCart(item)}
+            >
+              <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                />
+                {item.badge && (
+                  <span className="absolute top-0 left-0 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-br-lg">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-foreground text-sm leading-tight">{item.name}</h3>
+                <p className="text-muted-foreground text-xs line-clamp-2 mt-0.5">{item.description}</p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  {item.originalPrice && (
+                    <span className="text-xs text-muted-foreground line-through">
+                      R$ {item.originalPrice.toFixed(2).replace('.', ',')}
+                    </span>
+                  )}
+                  <span className="text-sm font-bold text-primary">
+                    R$ {item.price.toFixed(2).replace('.', ',')}
+                  </span>
+                </div>
+              </div>
+              <Button
+                variant="glow"
+                size="sm"
+                className="font-bold flex-shrink-0 text-xs px-3"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(item);
+                }}
+              >
+                Pedir
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Grid View */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {filteredItems.map((item, index) => (
             <Card
               key={item.id}
               className="bg-card border-border overflow-hidden hover:scale-105 hover:shadow-[var(--shadow-card)] transition-all duration-300 fade-in-up"
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              <div className="relative overflow-hidden h-48 sm:h-56 md:h-64">
+              <div className="relative overflow-hidden h-56 md:h-64">
                 <img
                   src={item.image}
                   alt={item.name}
@@ -69,29 +121,29 @@ const Menu = () => {
                   </span>
                 )}
               </div>
-              <CardHeader className="p-4 md:p-6">
-                <CardTitle className="text-xl md:text-2xl font-black text-foreground">
+              <CardHeader className="p-6">
+                <CardTitle className="text-2xl font-black text-foreground">
                   {item.name}
                 </CardTitle>
-                <CardDescription className="text-muted-foreground text-sm md:text-base">
+                <CardDescription className="text-muted-foreground text-base">
                   {item.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col sm:flex-row items-center gap-3 sm:justify-between p-4 md:p-6 pt-0">
+              <CardContent className="flex items-center justify-between p-6 pt-0">
                 <div className="flex items-center gap-2">
                   {item.originalPrice && (
                     <span className="text-lg text-muted-foreground line-through">
                       R$ {item.originalPrice.toFixed(2).replace('.', ',')}
                     </span>
                   )}
-                  <span className="text-2xl md:text-3xl font-bold text-primary">
+                  <span className="text-3xl font-bold text-primary">
                     R$ {item.price.toFixed(2).replace('.', ',')}
                   </span>
                 </div>
                 <Button
                   variant="glow"
                   size="default"
-                  className="font-bold w-full sm:w-auto"
+                  className="font-bold"
                   onClick={() => handleAddToCart(item)}
                 >
                   Pedir Agora
