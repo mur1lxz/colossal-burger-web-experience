@@ -3,8 +3,10 @@ export interface MenuItem {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number;
   image: string;
-  category: 'burgers' | 'sides' | 'drinks' | 'desserts';
+  category: 'promocoes' | 'combos' | 'porcoes' | 'classicos' | 'especiais' | 'bebidas' | 'molhos';
+  badge?: string;
 }
 
 export interface CartItemExtra {
