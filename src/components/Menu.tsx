@@ -49,53 +49,40 @@ const Menu = () => {
           ))}
         </div>
 
-        {/* Mobile: compact list layout | Desktop: grid cards */}
-        {/* Mobile List View */}
-        <div className="flex flex-col gap-3 md:hidden">
+        {/* Mobile: grid 3 columns | Desktop: grid cards */}
+        <div className="grid grid-cols-3 gap-2 md:hidden">
           {filteredItems.map((item, index) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-all duration-200 cursor-pointer fade-in-up"
-              style={{ animationDelay: `${index * 80}ms` }}
+              className="flex flex-col bg-card border border-border rounded-lg overflow-hidden cursor-pointer fade-in-up hover:border-primary/40 transition-all"
+              style={{ animationDelay: `${index * 60}ms` }}
               onClick={() => handleAddToCart(item)}
             >
-              <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+              <div className="relative aspect-square overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />
                 {item.badge && (
-                  <span className="absolute top-0 left-0 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-br-lg">
+                  <span className="absolute top-0 left-0 bg-primary text-primary-foreground text-[7px] font-bold px-1 py-0.5 rounded-br-md">
                     {item.badge}
                   </span>
                 )}
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-foreground text-sm leading-tight">{item.name}</h3>
-                <p className="text-muted-foreground text-xs line-clamp-2 mt-0.5">{item.description}</p>
-                <div className="flex items-center gap-2 mt-1.5">
+              <div className="p-1.5 flex flex-col flex-1">
+                <h3 className="font-bold text-foreground text-[10px] leading-tight line-clamp-2">{item.name}</h3>
+                <div className="mt-auto pt-1">
                   {item.originalPrice && (
-                    <span className="text-xs text-muted-foreground line-through">
+                    <span className="text-[8px] text-muted-foreground line-through block">
                       R$ {item.originalPrice.toFixed(2).replace('.', ',')}
                     </span>
                   )}
-                  <span className="text-sm font-bold text-primary">
+                  <span className="text-xs font-bold text-primary">
                     R$ {item.price.toFixed(2).replace('.', ',')}
                   </span>
                 </div>
               </div>
-              <Button
-                variant="glow"
-                size="sm"
-                className="font-bold flex-shrink-0 text-xs px-3"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart(item);
-                }}
-              >
-                Pedir
-              </Button>
             </div>
           ))}
         </div>
