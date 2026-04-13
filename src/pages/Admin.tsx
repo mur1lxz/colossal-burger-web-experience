@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -60,6 +60,18 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const orderCountRef = useRef<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playNotification = useCallback(() => {
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio('/notification.wav');
+      }
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    } catch {}
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/admin/login');
@@ -70,7 +82,11 @@ const Admin = () => {
       fetchOrders();
       const channel = supabase
         .channel('orders-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetchOrders())
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, () => {
+          playNotification();
+          fetchOrders();
+        })
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders' }, () => fetchOrders())
         .subscribe();
       return () => { supabase.removeChannel(channel); };
     }
